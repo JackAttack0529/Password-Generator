@@ -125,14 +125,54 @@ function generatePassword(lower, upper, number, symbol, length){
   }
 
   // 4. ADD THE GENERATED PASSWORD TO THE FINAL PASSWORD VARIABLE AND RETURN IT OUT OF THE FUNCTION
-  // Removing extra characters if necessary (the above loop will create a password that may NOT match the length selected if that length is NOT a multiple of the number of options/checkboxes selected)
+  // Removing extra characters if necessary (The above loop will create a password that may NOT match the length selected if that length is NOT a multiple of the number of options/checkboxes selected)
   const finalPassword = generatedPassword.slice(0, length);
   console.log(finalPassword);
 
   return finalPassword;
-
 }
 
 // Example of the generatePassword function
 // NOTE: Using the starting values for when the page first loads
-generatePassword(true, true, true, true, 5);
+// generatePassword(true, true, true, true, 4);
+
+// Event listener for when the "Generate Password" button is clicked
+generateEl.addEventListener(`click`, () => {
+
+  // Checking if the following options/checkboxes are selected/checked and setting the true or false values to the respective variables
+  const hasLower = lowercaseEl.checked;
+  console.log(lowercaseEl.checked);
+  const hasUpper = uppercaseEl.checked;
+  console.log(uppercaseEl.checked);
+  const hasNumber = numbersEl.checked;
+  console.log(numbersEl.checked);
+  const hasSymbol = symbolsEl.checked;
+  console.log(symbolsEl.checked);
+
+  // Accessing the value for the number input and changing the value from a string to a number
+  // NOTE: The value returned from a number input is a string value
+  const length = parseInt(lengthEl.value);
+  console.log(lengthEl.value);
+
+  console.log(hasLower, hasUpper, hasNumber, hasSymbol, length);
+
+  // The generatePassword function takes the true/false values determined by the checkboxes as well as the number from the number input as arguments and returns a string (AKA The Password) which is set as the innerText value for the "result" (AKA Span element)
+  resultEl.innerText = generatePassword(hasLower, hasUpper, hasNumber, hasSymbol, length);
+});
+
+// COPY PASSWORD
+clipboardEl.addEventListener(`click`, () => {
+
+  // Accessing the text/string value (AKA The Password) from the "result" span and setting it to the "password" variable
+  const password = resultEl.innerText;
+
+  // If the user clicks the clipboard button while no password is displayed, then an alert will be displayed to the user and the function will end and nothing will be copied to the clipboard
+  if (password.length === 0){
+    alert(`Please generate a password first`);
+    return;
+  }
+
+  // Referencing the "navigator" object to copy the selected value to the clipboard on the device the webpage is being viewed on
+  navigator.clipboard.writeText(password);
+  console.log(navigator);
+});
